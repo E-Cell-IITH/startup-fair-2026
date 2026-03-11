@@ -1,28 +1,35 @@
 package routes
 
 import (
-	"os"
+	"net/http"
 
-	"github.com/gin-contrib/cors"
+	"github.com/E-Cell-IITH/startup-fair-2026/internal/controllers"
+	middleware "github.com/E-Cell-IITH/startup-fair-2026/internal/middlwares"
 	"github.com/gin-gonic/gin"
 )
 
-func SetUpRouter() *gin.Engine {
-	ENV_MODE := os.Getenv("ENV")
-	if ENV_MODE == "debug" {
-		gin.SetMode(gin.DebugMode)
-	} else {
-		gin.SetMode(gin.ReleaseMode)
+func SetUpRoutes(r *gin.Engine) {
+	r.GET("/hello", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "working",
+		})
+	})
+
+	// auth routes
+	auth := r.Group("/api/auth")
+	{
+		auth.POST("/login",controllers.Login)
+		auth.GET("/me", middleware.AuthMiddleware(), controllers.GetUser)
 	}
-	router := gin.Default()
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:5173", "http://127.0.0.1:5173"}
-	config.AllowMethods = []string{"OPTIONS", "GET", "POST", "PUT", "DELETE", "PATCH"}
-	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"}
-	config.AllowCredentials = true
-	router.Use(cors.New(config))
+	// login , logout
 
-	SetUpRoutes(router)
+	// admin routes
+	// add startup
 
-	return router
+	// user routes
+	// buy
+
+	// public route
+	// check leaderboard
+
 }
