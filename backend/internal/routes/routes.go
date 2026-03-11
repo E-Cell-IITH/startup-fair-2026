@@ -26,10 +26,10 @@ func SetUpRoutes(r *gin.Engine) {
 	startup := r.Group("/api")
 	startup.Use(middleware.AuthMiddleware())
 	{
-		startup.GET("/startups")
+		startup.GET("/startups", controllers.GetAllStartups)
 		startup.POST("/startups", controllers.AddStartup)
-		startup.PATCH("/startups/:id")
-		startup.DELETE("/startup/:id")
+		startup.PATCH("/startups/:id", controllers.UpdateStartup)
+		startup.DELETE("/startups/:id", controllers.DeleteStartup)
 	}
 
 	// public route

@@ -57,7 +57,7 @@ const ProtectedRoute = () => {
         <>
 
             <Navbar user={user} />
-            <Outlet /></>
+             <Outlet context={{ user }} /></>
     )
 
 }
