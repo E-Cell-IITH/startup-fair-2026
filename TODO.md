@@ -3,3 +3,4 @@ TODO
 - Profile Page 
 - Leaderboard Page 
 - Change loader styling 
+- Add footer
