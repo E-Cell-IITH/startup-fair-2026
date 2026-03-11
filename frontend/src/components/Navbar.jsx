@@ -45,7 +45,7 @@ const Navbar = ({ user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [profileOpen, setProfileOpen] = useState(false);
-
+  // console.log(user.is_admin)
   const isAdmin = user?.is_admin;
   const balance = user?.amount_left ?? 10000;
 
