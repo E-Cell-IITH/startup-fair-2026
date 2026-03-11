@@ -8,152 +8,209 @@ const EditModal = ({ startup, onClose, fetchStartups }) => {
   })
 
   const handleSave = async () => {
-
     try {
-
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/startups/${startup.startup_id}`,
         {
           method: "PATCH",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             startup_name: form.name,
             startup_description: form.description
           })
         }
       )
+      if (!res.ok) { console.error("Update failed"); return }
+      console.log("Startup updated")
+      onClose()
+      fetchStartups()
+    } catch (err) {
+      console.error("Update error:", err)
+    }
+  }
+
+  return (
+    <div
+      className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center px-4"
+      style={{ background: "rgba(20,24,60,0.35)", backdropFilter: "blur(8px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="modal-box bg-white rounded-2xl w-full font-outfit"
+        style={{ maxWidth: "460px", padding: "40px 36px 36px", boxShadow: "0 24px 64px rgba(60,80,200,0.18)" }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between mb-7">
+          <div>
+            <h2 className="font-lora text-xl font-bold text-gray-900" style={{ letterSpacing: "-0.02em" }}>Edit Startup</h2>
+            <p className="text-xs font-light mt-1" style={{ color: "#aab2cc" }}>Changes will be saved immediately</p>
+          </div>
+          <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400" style={{ background: "#f6f8ff", border: "none", cursor: "pointer", transition: "all 0.15s" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>Startup Name</label>
+            <input
+              type="text"
+              className="modal-input w-full rounded-xl px-4 py-3 text-sm text-gray-800 font-outfit"
+              style={{ border: "1.5px solid #e0e4f0", background: "#fafbff" }}
+              value={form.name}
+              onChange={e => setForm({ ...form, name: e.target.value })}
+            />
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>Description</label>
+            <textarea
+              className="modal-input w-full rounded-xl px-4 py-3 text-sm text-gray-800 font-outfit resize-none"
+              style={{ border: "1.5px solid #e0e4f0", background: "#fafbff", minHeight: "110px" }}
+              value={form.description}
+              onChange={e => setForm({ ...form, description: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="flex gap-3 mt-7">
+          <button onClick={onClose} className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500" style={{ border: "1.5px solid #e0e4f0", background: "white", cursor: "pointer", transition: "all 0.2s" }}>Cancel</button>
+          <button
+            onClick={handleSave}
+            disabled={!form.name.trim() || !form.description.trim()}
+            className="flex-1 py-3 rounded-xl text-sm font-semibold text-white"
+            style={{
+              background: "linear-gradient(135deg,#4c6ef5,#845ef7)",
+              border: "none",
+              cursor: !form.name.trim() || !form.description.trim() ? "not-allowed" : "pointer",
+              opacity: !form.name.trim() || !form.description.trim() ? 0.6 : 1,
+              transition: "all 0.2s",
+              boxShadow: "0 2px 12px rgba(76,110,245,0.25)"
+            }}
+          >
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const InvestModal = ({ startup, onClose }) => {
+  const [amount, setAmount] = useState("")
+
+  const handleInvest = async () => {
+
+    try {
+
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/users/invest`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            startup_id: startup.startup_id,
+            amount: Number(amount)
+          })
+        }
+      )
+
+      const data = await res.json()
 
       if (!res.ok) {
-        console.error("Update failed")
+        console.error("Investment failed:", data)
         return
       }
 
-      console.log("Startup updated")
+      console.log("Investment success:", data)
 
       onClose()
 
-      // refresh list from DB
-      fetchStartups()
-
     } catch (err) {
-      console.error("Update error:", err)
+
+      console.error("Investment error:", err)
+
     }
 
   }
 
+  const isValid = amount !== "" && Number(amount) > 0
+
   return (
-    <>
-      <style>{`
-        @keyframes backdropIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes modalIn {
-          from { opacity: 0; transform: scale(0.95) translateY(12px); }
-          to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-        .modal-backdrop { animation: backdropIn 0.2s ease both; }
-        .modal-box { animation: modalIn 0.25s ease both; }
-        .modal-input:focus { outline: none; border-color: #4c6ef5; box-shadow: 0 0 0 3px rgba(76,110,245,0.1); }
-        .modal-input { transition: border-color 0.2s, box-shadow 0.2s; }
-      `}</style>
-
-      {/* Backdrop */}
+    <div
+      className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center px-4"
+      style={{ background: "rgba(20,24,60,0.35)", backdropFilter: "blur(8px)" }}
+      onClick={onClose}
+    >
       <div
-        className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center px-4"
-        style={{ background: "rgba(20,24,60,0.35)", backdropFilter: "blur(8px)" }}
-        onClick={onClose}
+        className="modal-box bg-white rounded-2xl w-full font-outfit"
+        style={{ maxWidth: "420px", padding: "40px 36px 36px", boxShadow: "0 24px 64px rgba(60,80,200,0.18)" }}
+        onClick={e => e.stopPropagation()}
       >
-        {/* Modal */}
-        <div
-          className="modal-box bg-white rounded-2xl w-full font-outfit"
-          style={{
-            maxWidth: "460px",
-            padding: "40px 36px 36px",
-            boxShadow: "0 24px 64px rgba(60,80,200,0.18)",
-          }}
-          onClick={e => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="flex items-start justify-between mb-7">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+              style={{ background: "linear-gradient(135deg,#4c6ef5,#845ef7)" }}
+            >
+              {startup.startup_name?.[0]?.toUpperCase()}
+            </div>
             <div>
-              <h2 className="font-lora text-xl font-bold text-gray-900" style={{ letterSpacing: "-0.02em" }}>
-                Edit Startup
-              </h2>
-              <p className="text-xs font-light mt-1" style={{ color: "#aab2cc" }}>
-                Changes will be saved immediately
-              </p>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-600"
-              style={{ background: "#f6f8ff", border: "none", cursor: "pointer", transition: "all 0.15s" }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Fields */}
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>
-                Startup Name
-              </label>
-              <input
-                type="text"
-                className="modal-input w-full rounded-xl px-4 py-3 text-sm text-gray-800 font-outfit"
-                style={{ border: "1.5px solid #e0e4f0", background: "#fafbff" }}
-                value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
-              />
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>
-                Description
-              </label>
-              <textarea
-                className="modal-input w-full rounded-xl px-4 py-3 text-sm text-gray-800 font-outfit resize-none"
-                style={{ border: "1.5px solid #e0e4f0", background: "#fafbff", minHeight: "110px" }}
-                value={form.description}
-                onChange={e => setForm({ ...form, description: e.target.value })}
-              />
+              <h2 className="font-lora text-xl font-bold text-gray-900" style={{ letterSpacing: "-0.02em" }}>Invest</h2>
+              <p className="text-xs font-light" style={{ color: "#aab2cc" }}>{startup.startup_name}</p>
             </div>
           </div>
+          <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400" style={{ background: "#f6f8ff", border: "none", cursor: "pointer", transition: "all 0.15s" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+          </button>
+        </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 mt-7">
-            <button
-              onClick={onClose}
-              className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500"
-              style={{ border: "1.5px solid #e0e4f0", background: "white", cursor: "pointer", transition: "all 0.2s" }}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={!form.name.trim() || !form.description.trim()}
-              className="flex-1 py-3 rounded-xl text-sm font-semibold text-white"
-              style={{
-                background: "linear-gradient(135deg,#4c6ef5,#845ef7)",
-                border: "none",
-                cursor: !form.name.trim() || !form.description.trim() ? "not-allowed" : "pointer",
-                opacity: !form.name.trim() || !form.description.trim() ? 0.6 : 1,
-                transition: "all 0.2s",
-                boxShadow: "0 2px 12px rgba(76,110,245,0.25)"
-              }}
-            >
-              Save Changes
-            </button>
+        {/* Valuation pill */}
+        <div className="flex items-center justify-between rounded-xl px-4 py-3 mb-6" style={{ background: "#f6f8ff" }}>
+          <span className="text-xs font-medium" style={{ color: "#aab2cc" }}>Current Valuation</span>
+          <span className="text-sm font-semibold" style={{ color: "#2f9e44" }}>₹{Number(startup.current_valuation).toLocaleString()}</span>
+        </div>
+
+        {/* Amount input */}
+        <div className="flex flex-col gap-1.5 mb-7">
+          <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>Amount to Invest (₹)</label>
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold" style={{ color: "#aab2cc" }}>₹</span>
+            <input
+              type="number"
+              min="1"
+              className="modal-input w-full rounded-xl pl-8 pr-4 py-3 text-sm text-gray-800 font-outfit"
+              style={{ border: "1.5px solid #e0e4f0", background: "#fafbff" }}
+              placeholder="e.g. 500"
+              value={amount}
+              onChange={e => setAmount(e.target.value)}
+            />
           </div>
         </div>
+
+        {/* Actions */}
+        <div className="flex gap-3">
+          <button onClick={onClose} className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500" style={{ border: "1.5px solid #e0e4f0", background: "white", cursor: "pointer", transition: "all 0.2s" }}>Cancel</button>
+          <button
+            onClick={handleInvest}
+            disabled={!isValid}
+            className="flex-1 py-3 rounded-xl text-sm font-semibold text-white"
+            style={{
+              background: "linear-gradient(135deg,#4c6ef5,#845ef7)",
+              border: "none",
+              cursor: !isValid ? "not-allowed" : "pointer",
+              opacity: !isValid ? 0.6 : 1,
+              transition: "all 0.2s",
+              boxShadow: "0 2px 12px rgba(76,110,245,0.25)"
+            }}
+          >
+            Confirm Investment
+          </button>
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -162,54 +219,31 @@ const StartupsPage = () => {
   const [startups, setStartups] = useState([])
   const [loading, setLoading] = useState(true)
   const [editingStartup, setEditingStartup] = useState(null)
+  const [investingStartup, setInvestingStartup] = useState(null)
   const navigate = useNavigate()
+
   const fetchStartups = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/startups`, {
-        credentials: "include"
-      })
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/startups`, { credentials: "include" })
       const data = await res.json()
-      // console.log(data.startups)
       setStartups(data.startups || [])
     } catch (err) {
       console.error(err)
     }
     setLoading(false)
   }
-  useEffect(() => {
-    fetchStartups()
-  }, [])
+
+  useEffect(() => { fetchStartups() }, [])
 
   const handleDelete = async (id) => {
-
     if (!window.confirm("Delete this startup?")) return
-
     try {
-
-      const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/startups/${id}`,
-        {
-          method: "DELETE",
-          credentials: "include"
-        }
-      )
-
-      if (!res.ok) {
-        console.error("Delete failed")
-        return
-      }
-
-      console.log("Startup deleted")
-
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/startups/${id}`, { method: "DELETE", credentials: "include" })
+      if (!res.ok) { console.error("Delete failed"); return }
       fetchStartups()
-
     } catch (err) {
       console.error("Delete error:", err)
     }
-
-  }
-  const handleSave = (updated) => {
-    setStartups(prev => prev.map(s => s.startup_id === updated.startup_id ? updated : s))
   }
 
   return (
@@ -245,15 +279,24 @@ const StartupsPage = () => {
           from { background-position: 200% 0; }
           to { background-position: -200% 0; }
         }
+        @keyframes backdropIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalIn {
+          from { opacity: 0; transform: scale(0.95) translateY(12px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-backdrop { animation: backdropIn 0.2s ease both; }
+        .modal-box { animation: modalIn 0.25s ease both; }
+        .modal-input:focus { outline: none; border-color: #4c6ef5; box-shadow: 0 0 0 3px rgba(76,110,245,0.1); }
+        .modal-input { transition: border-color 0.2s, box-shadow 0.2s; }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
       `}</style>
 
-      {/* Edit Modal */}
       {editingStartup && (
-        <EditModal
-          startup={editingStartup}
-          onClose={() => setEditingStartup(null)}
-          fetchStartups={fetchStartups}
-        />
+        <EditModal startup={editingStartup} onClose={() => setEditingStartup(null)} fetchStartups={fetchStartups} />
+      )}
+      {investingStartup && (
+        <InvestModal startup={investingStartup} onClose={() => setInvestingStartup(null)} />
       )}
 
       <div
@@ -262,19 +305,15 @@ const StartupsPage = () => {
       >
         <div className="max-w-6xl mx-auto">
 
-          {/* Header */}
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h1 className="font-lora text-3xl font-bold text-gray-900" style={{ letterSpacing: "-0.02em" }}>
-                Startups
-              </h1>
+              <h1 className="font-lora text-3xl font-bold text-gray-900" style={{ letterSpacing: "-0.02em" }}>Startups</h1>
               <p className="text-sm font-light mt-1" style={{ color: "#aab2cc" }}>
                 {loading ? "Fetching startups…" : `${startups.length} compan${startups.length === 1 ? "y" : "ies"} listed`}
               </p>
             </div>
           </div>
 
-          {/* Skeleton */}
           {loading && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
@@ -290,7 +329,6 @@ const StartupsPage = () => {
             </div>
           )}
 
-          {/* Empty */}
           {!loading && startups.length === 0 && (
             <div className="text-center py-24">
               <div className="text-5xl mb-4">🚀</div>
@@ -299,7 +337,6 @@ const StartupsPage = () => {
             </div>
           )}
 
-          {/* Grid */}
           {!loading && startups.length > 0 && (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {startups.map((startup, i) => (
@@ -316,9 +353,7 @@ const StartupsPage = () => {
                       >
                         {startup.startup_name?.[0]?.toUpperCase()}
                       </div>
-                      <h2 className="font-semibold text-base text-gray-900 leading-tight">
-                        {startup.startup_name}
-                      </h2>
+                      <h2 className="font-semibold text-base text-gray-900 leading-tight">{startup.startup_name}</h2>
                     </div>
 
                     {user?.is_admin && (
@@ -369,7 +404,7 @@ const StartupsPage = () => {
                         cursor: "pointer",
                         boxShadow: "0 2px 10px rgba(76,110,245,0.2)"
                       }}
-                      onClick={() => navigate(`/startups/${startup.startup_id}`)}
+                      onClick={() => setInvestingStartup(startup)}
                     >
                       Invest
                     </button>

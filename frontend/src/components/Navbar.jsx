@@ -140,7 +140,7 @@ const Navbar = ({ user }) => {
             <div className="text-right hidden sm:block">
               <div className="text-xs font-light" style={{ color: "#aab2cc" }}>Balance</div>
               <div className="text-sm font-semibold" style={{ color: "#2f9e44" }}>
-                ${balance.toLocaleString()}
+                ₹{balance.toLocaleString()}
               </div>
             </div>
 

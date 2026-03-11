@@ -43,7 +43,6 @@ func Login(c *gin.Context) {
 	// get user details
 	email := payload.Claims["email"].(string)
 	username := payload.Claims["name"].(string)
-
 	// if user exists get username, email, role
 	_, err = db.GetUserDetailsByEmail(ctx, email)
 	if err != nil {
