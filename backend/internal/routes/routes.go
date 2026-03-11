@@ -18,16 +18,19 @@ func SetUpRoutes(r *gin.Engine) {
 	// auth routes
 	auth := r.Group("/api/auth")
 	{
-		auth.POST("/login",controllers.Login)
+		auth.POST("/login", controllers.Login)
 		auth.GET("/me", middleware.AuthMiddleware(), controllers.GetUser)
 	}
 
-	// admin routes
-	// add startup
-	
-
-	// user routes
-	// buy
+	// starup routes
+	startup := r.Group("/api")
+	startup.Use(middleware.AuthMiddleware())
+	{
+		startup.GET("/startups")
+		startup.POST("/startups", controllers.AddStartup)
+		startup.PATCH("/startups/:id")
+		startup.DELETE("/startup/:id")
+	}
 
 	// public route
 	// check leaderboard
