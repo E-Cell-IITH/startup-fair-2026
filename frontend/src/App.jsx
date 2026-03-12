@@ -3,6 +3,7 @@ import LoginScreen from "./pages/Auth/LoginScreen"
 import StartupsPage from "./pages/Startup/StartupsPage"
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute"
 import AddStartup from "./pages/Startup/AddStartup"
+import Leaderboard from "./pages/Startup/Leaderboard"
 function App() {
   return (
     <>
@@ -15,6 +16,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/startups" element={<StartupsPage />} />
           <Route path="/startups/add" element={<AddStartup />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
         </Route>
 
       </Routes>

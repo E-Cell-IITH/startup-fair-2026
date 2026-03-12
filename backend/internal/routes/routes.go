@@ -36,5 +36,5 @@ func SetUpRoutes(r *gin.Engine) {
 	{
 		user.POST("/invest", controllers.Invest)
 	}
-
+	r.GET("/api/leaderboard", middleware.AuthMiddleware(), controllers.Leaderboard)
 }

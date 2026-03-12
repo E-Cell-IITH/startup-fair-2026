@@ -89,3 +89,33 @@ func UpdateStartup(
 
 	return nil
 }
+
+
+func GetLeaderboard(ctx context.Context) ([]schema.Leaderboard, error) {
+	query := `
+	SELECT startup_name
+	FROM startups
+	ORDER BY current_valuation DESC;
+	`
+
+	rows, err := config.DB.Query(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var leaderboard []schema.Leaderboard
+
+	for rows.Next() {
+		var entry schema.Leaderboard
+
+		err := rows.Scan(&entry.StartupName)
+		if err != nil {
+			return nil, err
+		}
+
+		leaderboard = append(leaderboard, entry)
+	}
+
+	return leaderboard, nil
+}

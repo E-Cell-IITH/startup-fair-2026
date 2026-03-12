@@ -3,7 +3,6 @@ package controllers
 import (
 	"log"
 	"net/http"
-
 	"github.com/E-Cell-IITH/startup-fair-2026/internal/db"
 	"github.com/E-Cell-IITH/startup-fair-2026/internal/helpers"
 	"github.com/E-Cell-IITH/startup-fair-2026/internal/schema"
@@ -206,5 +205,21 @@ func UpdateStartup(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Startup updated successfully",
+	})
+}
+
+func Leaderboard(c *gin.Context) {
+	ctx := c.Request.Context()
+
+	data, err := db.GetLeaderboard(ctx)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Failed to get leaderboard",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"leaderboard": data,
 	})
 }

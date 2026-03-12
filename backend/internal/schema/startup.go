@@ -1,4 +1,4 @@
-package schema 
+package schema
 
 type AddStartupRequest struct {
 	StartupName        string `json:"startup_name" binding:"required"`
@@ -15,4 +15,8 @@ type Startup struct {
 type UpdateStartupRequest struct {
 	StartupName        string `json:"startup_name" binding:"required"`
 	StartupDescription string `json:"startup_description" binding:"required"`
+}
+
+type Leaderboard struct {
+	StartupName string `json:"startup_name"`
 }
