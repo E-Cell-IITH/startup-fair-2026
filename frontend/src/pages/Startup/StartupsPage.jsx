@@ -21,10 +21,10 @@ const EditModal = ({ startup, onClose, fetchStartups }) => {
           })
         }
       )
-      if (!res.ok) { 
-        console.error("Update failed"); 
+      if (!res.ok) {
+        console.error("Update failed");
         alert('Failed to update startup')
-        return 
+        return
       }
       onClose()
       fetchStartups()
@@ -136,103 +136,106 @@ const InvestModal = ({ startup, onClose, fetchStartups }) => {
   const isValid = amount !== "" && Number(amount) > 0
 
   return (
-    <div
-      className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center px-4"
-      style={{ background: "rgba(20,24,60,0.35)", backdropFilter: "blur(8px)" }}
-      onClick={onClose}
-    >
+
+    <>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       <div
-        className="modal-box bg-white rounded-2xl w-full font-outfit"
-        style={{ maxWidth: "420px", padding: "40px 36px 36px", boxShadow: "0 24px 64px rgba(60,80,200,0.18)" }}
-        onClick={e => e.stopPropagation()}
+        className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center px-4"
+        style={{ background: "rgba(20,24,60,0.35)", backdropFilter: "blur(8px)" }}
+        onClick={onClose}
       >
-        {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-              style={{ background: "linear-gradient(135deg,#4c6ef5,#845ef7)" }}
-            >
-              {startup.startup_name?.[0]?.toUpperCase()}
+        <div
+          className="modal-box bg-white rounded-2xl w-full font-outfit"
+          style={{ maxWidth: "420px", padding: "40px 36px 36px", boxShadow: "0 24px 64px rgba(60,80,200,0.18)" }}
+          onClick={e => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+                style={{ background: "linear-gradient(135deg,#4c6ef5,#845ef7)" }}
+              >
+                {startup.startup_name?.[0]?.toUpperCase()}
+              </div>
+              <div>
+                <h2 className="font-lora text-xl font-bold text-gray-900" style={{ letterSpacing: "-0.02em" }}>Invest</h2>
+                <p className="text-xs font-light" style={{ color: "#aab2cc" }}>{startup.startup_name}</p>
+              </div>
             </div>
-            <div>
-              <h2 className="font-lora text-xl font-bold text-gray-900" style={{ letterSpacing: "-0.02em" }}>Invest</h2>
-              <p className="text-xs font-light" style={{ color: "#aab2cc" }}>{startup.startup_name}</p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            disabled={loading}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400"
-            style={{ background: "#f6f8ff", border: "none", cursor: loading ? "not-allowed" : "pointer", transition: "all 0.15s" }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Amount input */}
-        <div className="flex flex-col gap-1.5 mb-7">
-          <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>
-            Amount to Invest (₹)
-          </label>
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold" style={{ color: "#aab2cc" }}>₹</span>
-            <input
-              type="number"
-              min="1"
+            <button
+              onClick={onClose}
               disabled={loading}
-              className="modal-input w-full rounded-xl pl-8 pr-4 py-3 text-sm text-gray-800 font-outfit"
-              style={{ border: "1.5px solid #e0e4f0", background: loading ? "#f6f8ff" : "#fafbff" }}
-              placeholder="e.g. 500"
-              value={amount}
-              onChange={e => setAmount(e.target.value)}
-            />
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400"
+              style={{ background: "#f6f8ff", border: "none", cursor: loading ? "not-allowed" : "pointer", transition: "all 0.15s" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Amount input */}
+          <div className="flex flex-col gap-1.5 mb-7">
+            <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>
+              Amount to Invest (₹)
+            </label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold" style={{ color: "#aab2cc" }}>₹</span>
+              <input
+                type="number"
+                min="1"
+                disabled={loading}
+                className="modal-input w-full rounded-xl pl-8 pr-4 py-3 text-sm text-gray-800 font-outfit"
+                style={{ border: "1.5px solid #e0e4f0", background: loading ? "#f6f8ff" : "#fafbff" }}
+                placeholder="e.g. 500"
+                value={amount}
+                onChange={e => setAmount(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              disabled={loading}
+              className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500"
+              style={{ border: "1.5px solid #e0e4f0", background: "white", cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.5 : 1, transition: "all 0.2s" }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleInvest}
+              disabled={!isValid || loading}
+              className="invest-btn flex-1 py-3 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2"
+              style={{
+                background: "linear-gradient(135deg,#4c6ef5,#845ef7)",
+                border: "none",
+                cursor: !isValid || loading ? "not-allowed" : "pointer",
+                opacity: !isValid || loading ? 0.7 : 1,
+                transition: "all 0.2s",
+                boxShadow: "0 2px 12px rgba(76,110,245,0.25)"
+              }}
+            >
+              {loading ? (
+                <>
+                  <svg
+                    width="15" height="15" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+                    style={{ animation: "spin 0.7s linear infinite" }}
+                  >
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  </svg>
+                  Investing…
+                </>
+              ) : (
+                "Confirm Investment"
+              )}
+            </button>
           </div>
         </div>
-
-        {/* Actions */}
-        <div className="flex gap-3">
-          <button
-            onClick={onClose}
-            disabled={loading}
-            className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500"
-            style={{ border: "1.5px solid #e0e4f0", background: "white", cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.5 : 1, transition: "all 0.2s" }}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleInvest}
-            disabled={!isValid || loading}
-            className="invest-btn flex-1 py-3 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2"
-            style={{
-              background: "linear-gradient(135deg,#4c6ef5,#845ef7)",
-              border: "none",
-              cursor: !isValid || loading ? "not-allowed" : "pointer",
-              opacity: !isValid || loading ? 0.7 : 1,
-              transition: "all 0.2s",
-              boxShadow: "0 2px 12px rgba(76,110,245,0.25)"
-            }}
-          >
-            {loading ? (
-              <>
-                <svg
-                  width="15" height="15" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-                  style={{ animation: "spin 0.7s linear infinite" }}
-                >
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                </svg>
-                Investing…
-              </>
-            ) : (
-              "Confirm Investment"
-            )}
-          </button>
-        </div>
-      </div>
-    </div>
+      </div></>
   )
 }
 

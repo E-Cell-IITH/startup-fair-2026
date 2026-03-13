@@ -29,43 +29,39 @@ const ProtectedRoute = () => {
     checkAuth()
   }, [])
 
-  if (loading) {
-    return (
-      <>
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400&display=swap');
-          .font-outfit { font-family: 'Outfit', sans-serif; }
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-          }
-          .spinner {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 2.5px solid #e0e4f0;
-            border-top-color: #4c6ef5;
-            animation: spin 0.75s linear infinite;
-          }
-          .fade-in { animation: fadeIn 0.4s ease both; }
-        `}</style>
-
-        <div
-          className="font-outfit min-h-screen flex flex-col items-center justify-center gap-4"
-          style={{ background: "linear-gradient(145deg,#e9ecf8 0%,#dce2f4 55%,#e6eaf7 100%)" }}
-        >
-          <div className="spinner fade-in" />
-          <p className="fade-in text-sm font-light" style={{ color: "#aab2cc", animationDelay: "0.1s" }}>
-            Verifying your session…
-          </p>
-        </div>
-      </>
-    )
-  }
-
+ if (loading) {
+  return (
+    <div
+      style={{
+        fontFamily: "'Outfit', sans-serif",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "16px",
+        background: "linear-gradient(145deg,#e9ecf8 0%,#dce2f4 55%,#e6eaf7 100%)"
+      }}
+    >
+      <div
+        style={{
+          width: 36,
+          height: 36,
+          borderRadius: "50%",
+          border: "2.5px solid #e0e4f0",
+          borderTopColor: "#4c6ef5",
+          animation: "spin 0.75s linear infinite"
+        }}
+      />
+      <p style={{ color: "#aab2cc", fontSize: "0.875rem", fontWeight: 300, margin: 0 }}>
+        Verifying your session…
+      </p>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
+    </div>
+  )
+}
   if (!user) {
     return <Navigate to="/" replace />
   }
