@@ -65,10 +65,14 @@ func DeleteStartup(startupID string, ctx context.Context) error {
 
 	refundQuery := `
 	UPDATE users
-	SET amount_left = amount_left + i.investment_price
-	FROM investments i
-	WHERE users.user_id = i.user_id
-	AND i.startup_id = $1
+	SET amount_left = amount_left + inv.total
+	FROM (
+	    SELECT user_id, SUM(investment_price) AS total
+	    FROM investments
+	    WHERE startup_id = $1
+	    GROUP BY user_id
+	) inv
+	WHERE users.user_id = inv.user_id
 	`
 
 	_, err = tx.Exec(ctx, refundQuery, startupID)
@@ -86,8 +90,7 @@ func DeleteStartup(startupID string, ctx context.Context) error {
 		return err
 	}
 
-	err = tx.Commit(ctx)
-	return err
+	return tx.Commit(ctx)
 }
 
 func UpdateStartup(

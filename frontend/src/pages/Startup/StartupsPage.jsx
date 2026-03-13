@@ -170,11 +170,7 @@ const InvestModal = ({ startup, onClose,fetchStartups }) => {
           </button>
         </div>
 
-        {/* Valuation pill */}
-        <div className="flex items-center justify-between rounded-xl px-4 py-3 mb-6" style={{ background: "#f6f8ff" }}>
-          <span className="text-xs font-medium" style={{ color: "#aab2cc" }}>Current Valuation</span>
-          <span className="text-sm font-semibold" style={{ color: "#2f9e44" }}>₹{Number(startup.current_valuation).toLocaleString()}</span>
-        </div>
+      
 
         {/* Amount input */}
         <div className="flex flex-col gap-1.5 mb-7">
