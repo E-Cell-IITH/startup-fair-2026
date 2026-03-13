@@ -40,7 +40,7 @@ func InvestInStartup(userID string, startupID int, amount int, ctx context.Conte
 	_, err = tx.Exec(ctx, `
 	INSERT INTO investments(user_id, startup_id,investment_price)
 	VALUES ($1, $2,$3)
-	`, userID, startupID,amount)
+	`, userID, startupID, amount)
 
 	if err != nil {
 		return err

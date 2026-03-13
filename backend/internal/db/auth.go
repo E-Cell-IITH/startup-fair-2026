@@ -14,8 +14,7 @@ func GetUserDetailsByEmail(ctx context.Context, email string) (schema.DBCheckUse
 	return dbResponse, err
 }
 
-
-func InsertNewUser(username string, email string,  ctx context.Context) error {
+func InsertNewUser(username string, email string, ctx context.Context) error {
 	query := "insert into users (username, email, is_admin) values ($1,$2,$3)"
 	_, err := config.DB.Exec(ctx, query, username, email, false)
 	if err != nil {
@@ -23,7 +22,6 @@ func InsertNewUser(username string, email string,  ctx context.Context) error {
 	}
 	return nil
 }
-
 
 func GetUserDetails(ctx context.Context, userId string) (schema.UserDetailsResponse, error) {
 

@@ -113,7 +113,6 @@ func UpdateStartup(
 	return nil
 }
 
-
 func GetLeaderboard(ctx context.Context) ([]schema.Leaderboard, error) {
 	query := `
 	SELECT startup_name

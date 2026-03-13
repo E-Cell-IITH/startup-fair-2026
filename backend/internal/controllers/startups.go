@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"log"
-	"net/http"
 	"github.com/E-Cell-IITH/startup-fair-2026/internal/db"
 	"github.com/E-Cell-IITH/startup-fair-2026/internal/helpers"
 	"github.com/E-Cell-IITH/startup-fair-2026/internal/schema"
 	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
 )
 
 func AddStartup(c *gin.Context) {
