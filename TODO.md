@@ -1,6 +1,7 @@
 TODO 
-- Sync state properly when user clicks on invest 
-- Profile Page 
-- Leaderboard Page 
+- Sync state properly when user clicks on invest - done
+- Profile Page - profile and investements - done
+- Leaderboard Page - done 
 - Change loader styling 
-- Add footer
+- Add footer - done 
+- Implement Logout route - done

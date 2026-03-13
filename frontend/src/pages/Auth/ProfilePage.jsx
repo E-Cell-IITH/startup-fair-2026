@@ -122,7 +122,6 @@ const ProfilePage = () => {
 
                 {user.user_investments?.length === 0 && (
                   <div className="text-center py-10">
-                    <div className="text-4xl mb-3">📭</div>
                     <p className="text-sm font-light" style={{ color: "#aab2cc" }}>No investments yet</p>
                   </div>
                 )}

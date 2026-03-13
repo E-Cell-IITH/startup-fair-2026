@@ -86,7 +86,6 @@ const Leaderboard = () => {
           {/* Empty */}
           {!loading && leaderboard.length === 0 && (
             <div className="text-center py-24">
-              <div className="text-5xl mb-4">📭</div>
               <p className="font-lora text-xl text-gray-700 mb-2">No rankings yet</p>
               <p className="text-sm font-light" style={{ color: "#aab2cc" }}>Invest in startups to see them appear here.</p>
             </div>

@@ -58,13 +58,36 @@ func GetAllStartups(ctx context.Context) ([]schema.Startup, error) {
 
 func DeleteStartup(startupID string, ctx context.Context) error {
 
-	query := `
+	tx, err := config.DB.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	refundQuery := `
+	UPDATE users
+	SET amount_left = amount_left + i.investment_price
+	FROM investments i
+	WHERE users.user_id = i.user_id
+	AND i.startup_id = $1
+	`
+
+	_, err = tx.Exec(ctx, refundQuery, startupID)
+	if err != nil {
+		return err
+	}
+
+	deleteQuery := `
 	DELETE FROM startups
 	WHERE startup_id = $1
 	`
 
-	_, err := config.DB.Exec(ctx, query, startupID)
+	_, err = tx.Exec(ctx, deleteQuery, startupID)
+	if err != nil {
+		return err
+	}
 
+	err = tx.Commit(ctx)
 	return err
 }
 
