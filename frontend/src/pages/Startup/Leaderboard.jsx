@@ -74,7 +74,7 @@ const Leaderboard = () => {
             <div className="flex flex-col gap-3">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="bg-white rounded-2xl p-5 flex items-center gap-4" style={{ boxShadow: "0 4px 20px rgba(80,100,200,0.07)" }}>
-                  <div className="skeleton w-10 h-10 rounded-xl flex-shrink-0" />
+                  <div className="skeleton w-10 h-10 rounded-xl shrink-0" />
                   <div className="flex-1">
                     <div className="skeleton h-4 w-1/2" />
                   </div>
@@ -113,7 +113,7 @@ const Leaderboard = () => {
                   >
                     {/* Rank badge */}
                     <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-sm"
+                      className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 text-white font-bold text-sm"
                       style={{
                         background: isTop3
                           ? colors.badge
@@ -135,7 +135,7 @@ const Leaderboard = () => {
                     {/* Rank label for top 3 */}
                     {isTop3 && (
                       <span
-                        className="text-xs font-semibold px-3 py-1 rounded-full flex-shrink-0"
+                        className="text-xs font-semibold px-3 py-1 rounded-full shrink-0"
                         style={{ background: colors.badge, color: "white" }}
                       >
                         #{i + 1}

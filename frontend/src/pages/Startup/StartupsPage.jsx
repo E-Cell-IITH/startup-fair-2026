@@ -21,8 +21,11 @@ const EditModal = ({ startup, onClose, fetchStartups }) => {
           })
         }
       )
-      if (!res.ok) { console.error("Update failed"); return }
-      console.log("Startup updated")
+      if (!res.ok) { 
+        console.error("Update failed"); 
+        alert('Failed to update startup')
+        return 
+      }
       onClose()
       fetchStartups()
     } catch (err) {
@@ -94,7 +97,7 @@ const EditModal = ({ startup, onClose, fetchStartups }) => {
   )
 }
 
-const InvestModal = ({ startup, onClose }) => {
+const InvestModal = ({ startup, onClose,fetchStartups }) => {
   const [amount, setAmount] = useState("")
 
   const handleInvest = async () => {
@@ -120,13 +123,13 @@ const InvestModal = ({ startup, onClose }) => {
 
       if (!res.ok) {
         console.error("Investment failed:", data)
+        alert(data.message)
         return
       }
 
-      console.log("Investment success:", data)
 
       onClose()
-
+      fetchStartups()
     } catch (err) {
 
       console.error("Investment error:", err)
@@ -220,7 +223,6 @@ const StartupsPage = () => {
   const [loading, setLoading] = useState(true)
   const [editingStartup, setEditingStartup] = useState(null)
   const [investingStartup, setInvestingStartup] = useState(null)
-  const navigate = useNavigate()
 
   const fetchStartups = async () => {
     try {
@@ -296,7 +298,7 @@ const StartupsPage = () => {
         <EditModal startup={editingStartup} onClose={() => setEditingStartup(null)} fetchStartups={fetchStartups} />
       )}
       {investingStartup && (
-        <InvestModal startup={investingStartup} onClose={() => setInvestingStartup(null)} />
+        <InvestModal startup={investingStartup} onClose={() => setInvestingStartup(null)} fetchStartups={fetchStartups} />
       )}
 
       <div
@@ -347,7 +349,7 @@ const StartupsPage = () => {
                   <div className="flex items-start justify-between gap-2 mb-3">
                     <div className="flex items-center gap-3">
                       <div
-                        className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+                        className="w-9 h-9 rounded-xl flex items-center justify-center text-white text-sm font-bold shrink-0"
                         style={{ background: "linear-gradient(135deg,#4c6ef5,#845ef7)" }}
                       >
                         {startup.startup_name?.[0]?.toUpperCase()}
@@ -356,7 +358,7 @@ const StartupsPage = () => {
                     </div>
 
                     {user?.is_admin && (
-                      <div className="flex gap-1 flex-shrink-0">
+                      <div className="flex gap-1 shrink-0">
                         <button
                           className="action-btn edit-btn w-8 h-8 rounded-lg flex items-center justify-center text-gray-400"
                           style={{ background: "transparent", border: "none", cursor: "pointer" }}

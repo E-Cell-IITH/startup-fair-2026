@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Navigate, Outlet } from "react-router-dom"
 import Navbar from "../../components/Navbar"
+import Footer from "../../components/Footer"
 
 const ProtectedRoute = () => {
 
@@ -25,7 +26,7 @@ const ProtectedRoute = () => {
 
                     const data = await res.json()
 
-                    // console.log(data)
+                    // console.log(data.user)
                     setUser(data.user)
 
                 }
@@ -57,7 +58,10 @@ const ProtectedRoute = () => {
         <>
 
             <Navbar user={user} />
-             <Outlet context={{ user }} /></>
+             <Outlet context={{ user }} />
+             <Footer />
+             
+             </>
     )
 
 }

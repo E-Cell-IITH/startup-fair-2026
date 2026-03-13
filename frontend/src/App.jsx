@@ -4,6 +4,7 @@ import StartupsPage from "./pages/Startup/StartupsPage"
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute"
 import AddStartup from "./pages/Startup/AddStartup"
 import Leaderboard from "./pages/Startup/Leaderboard"
+import ProfilePage from "./pages/Auth/ProfilePage"
 function App() {
   return (
     <>
@@ -17,6 +18,7 @@ function App() {
           <Route path="/startups" element={<StartupsPage />} />
           <Route path="/startups/add" element={<AddStartup />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/profile" element={<ProfilePage/>} />
         </Route>
 
       </Routes>
