@@ -101,8 +101,19 @@ func Login(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
-	// destroy the token in local storage completelty
-	// send response to user
+	c.SetCookie(
+		"token", // cookie name
+		"",      // empty value
+		-1,      // MaxAge (-1 deletes cookie)
+		"/",     // path
+		"",      // domain
+		false,   // secure (true if using HTTPS)
+		true,    // httpOnly
+	)
+
+	c.JSON(200, gin.H{
+		"message": "Logged out successfully",
+	})
 }
 
 func GetUser(c *gin.Context) {

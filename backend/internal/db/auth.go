@@ -26,8 +26,53 @@ func InsertNewUser(username string, email string,  ctx context.Context) error {
 
 
 func GetUserDetails(ctx context.Context, userId string) (schema.UserDetailsResponse, error) {
-	query := `select username, is_admin, email, amount_left from users where user_id = $1`
+
 	var userResponse schema.UserDetailsResponse
-	err := config.DB.QueryRow(ctx, query, userId).Scan(&userResponse.Username, &userResponse.IsAdmin, &userResponse.Email, &userResponse.AmountLeft)
-	return userResponse, err
+
+	// Get user basic details
+	userQuery := `
+	SELECT user_id, username, email, is_admin, amount_left
+	FROM users
+	WHERE user_id = $1
+	`
+
+	err := config.DB.QueryRow(ctx, userQuery, userId).
+		Scan(
+			&userResponse.UserID,
+			&userResponse.Username,
+			&userResponse.Email,
+			&userResponse.IsAdmin,
+			&userResponse.AmountLeft,
+		)
+
+	if err != nil {
+		return userResponse, err
+	}
+
+	// Get investments
+	investmentQuery := `
+	SELECT s.startup_name, i.investment_price
+	FROM investments i
+	JOIN startups s ON s.startup_id = i.startup_id
+	WHERE i.user_id = $1
+	`
+
+	rows, err := config.DB.Query(ctx, investmentQuery, userId)
+	if err != nil {
+		return userResponse, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var inv schema.UserInvestments
+
+		err := rows.Scan(&inv.StartupName, &inv.InvestmentPrice)
+		if err != nil {
+			return userResponse, err
+		}
+
+		userResponse.Investments = append(userResponse.Investments, inv)
+	}
+
+	return userResponse, nil
 }

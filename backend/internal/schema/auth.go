@@ -20,4 +20,10 @@ type UserDetailsResponse struct {
 	Email      string `json:"email"`
 	IsAdmin    bool   `json:"is_admin"`
 	AmountLeft int    `json:"amount_left"`
+	Investments []UserInvestments `json:"user_investments"`
+}
+
+type UserInvestments struct{
+	StartupName string `json:"startup_name"`
+	InvestmentPrice int `json:"investment_price"`
 }

@@ -38,9 +38,9 @@ func InvestInStartup(userID string, startupID int, amount int, ctx context.Conte
 
 	// 1️ Insert investment (no amount column in schema)
 	_, err = tx.Exec(ctx, `
-	INSERT INTO investments(user_id, startup_id)
-	VALUES ($1, $2)
-	`, userID, startupID)
+	INSERT INTO investments(user_id, startup_id,investment_price)
+	VALUES ($1, $2,$3)
+	`, userID, startupID,amount)
 
 	if err != nil {
 		return err

@@ -20,6 +20,7 @@ func SetUpRoutes(r *gin.Engine) {
 	{
 		auth.POST("/login", controllers.Login)
 		auth.GET("/me", middleware.AuthMiddleware(), controllers.GetUser)
+		auth.POST("/logout", controllers.Logout)
 	}
 
 	// starup routes
