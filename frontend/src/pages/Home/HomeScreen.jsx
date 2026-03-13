@@ -113,7 +113,7 @@ const HomeScreen = () => {
                     {/* CTA */}
                     <div className="a5 flex flex-col items-center">
                         <button
-                            onClick={() => navigate("/startups")}
+                            onClick={() => navigate("/login")}
                             className="enter-btn flex items-center gap-3 px-8 py-4 rounded-2xl text-white font-semibold text-base"
                             style={{
                                 background: "linear-gradient(135deg,#4c6ef5,#845ef7)",

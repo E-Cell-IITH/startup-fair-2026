@@ -106,7 +106,7 @@ func Logout(c *gin.Context) {
 		"",      // empty value
 		-1,      // MaxAge (-1 deletes cookie)
 		"/",     // path
-		"",      // domain
+		"localhost",      // domain
 		false,   // secure (true if using HTTPS)
 		true,    // httpOnly
 	)
