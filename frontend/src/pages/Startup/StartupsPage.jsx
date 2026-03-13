@@ -97,45 +97,40 @@ const EditModal = ({ startup, onClose, fetchStartups }) => {
   )
 }
 
-const InvestModal = ({ startup, onClose,fetchStartups }) => {
+const InvestModal = ({ startup, onClose, fetchStartups }) => {
   const [amount, setAmount] = useState("")
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleInvest = async () => {
-
+    setLoading(true)
     try {
-
       const res = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/users/invest`,
         {
           method: "POST",
           credentials: "include",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             startup_id: startup.startup_id,
             amount: Number(amount)
           })
         }
       )
-
       const data = await res.json()
-
       if (!res.ok) {
         console.error("Investment failed:", data)
         alert(data.message)
+        setLoading(false)
         return
       }
-
-
       onClose()
       fetchStartups()
+      navigate("/profile")
     } catch (err) {
-
       console.error("Investment error:", err)
-
+      setLoading(false)
     }
-
   }
 
   const isValid = amount !== "" && Number(amount) > 0
@@ -165,23 +160,31 @@ const InvestModal = ({ startup, onClose,fetchStartups }) => {
               <p className="text-xs font-light" style={{ color: "#aab2cc" }}>{startup.startup_name}</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400" style={{ background: "#f6f8ff", border: "none", cursor: "pointer", transition: "all 0.15s" }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400"
+            style={{ background: "#f6f8ff", border: "none", cursor: loading ? "not-allowed" : "pointer", transition: "all 0.15s" }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
-      
-
         {/* Amount input */}
         <div className="flex flex-col gap-1.5 mb-7">
-          <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>Amount to Invest (₹)</label>
+          <label className="text-xs font-medium uppercase tracking-widest" style={{ color: "#8b96b8" }}>
+            Amount to Invest (₹)
+          </label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-semibold" style={{ color: "#aab2cc" }}>₹</span>
             <input
               type="number"
               min="1"
+              disabled={loading}
               className="modal-input w-full rounded-xl pl-8 pr-4 py-3 text-sm text-gray-800 font-outfit"
-              style={{ border: "1.5px solid #e0e4f0", background: "#fafbff" }}
+              style={{ border: "1.5px solid #e0e4f0", background: loading ? "#f6f8ff" : "#fafbff" }}
               placeholder="e.g. 500"
               value={amount}
               onChange={e => setAmount(e.target.value)}
@@ -191,21 +194,41 @@ const InvestModal = ({ startup, onClose,fetchStartups }) => {
 
         {/* Actions */}
         <div className="flex gap-3">
-          <button onClick={onClose} className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500" style={{ border: "1.5px solid #e0e4f0", background: "white", cursor: "pointer", transition: "all 0.2s" }}>Cancel</button>
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className="flex-1 py-3 rounded-xl text-sm font-medium text-gray-500"
+            style={{ border: "1.5px solid #e0e4f0", background: "white", cursor: loading ? "not-allowed" : "pointer", opacity: loading ? 0.5 : 1, transition: "all 0.2s" }}
+          >
+            Cancel
+          </button>
           <button
             onClick={handleInvest}
-            disabled={!isValid}
-            className="flex-1 py-3 rounded-xl text-sm font-semibold text-white"
+            disabled={!isValid || loading}
+            className="invest-btn flex-1 py-3 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2"
             style={{
               background: "linear-gradient(135deg,#4c6ef5,#845ef7)",
               border: "none",
-              cursor: !isValid ? "not-allowed" : "pointer",
-              opacity: !isValid ? 0.6 : 1,
+              cursor: !isValid || loading ? "not-allowed" : "pointer",
+              opacity: !isValid || loading ? 0.7 : 1,
               transition: "all 0.2s",
               boxShadow: "0 2px 12px rgba(76,110,245,0.25)"
             }}
           >
-            Confirm Investment
+            {loading ? (
+              <>
+                <svg
+                  width="15" height="15" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+                  style={{ animation: "spin 0.7s linear infinite" }}
+                >
+                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                </svg>
+                Investing…
+              </>
+            ) : (
+              "Confirm Investment"
+            )}
           </button>
         </div>
       </div>

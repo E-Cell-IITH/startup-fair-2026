@@ -128,7 +128,7 @@ const ProfilePage = () => {
 
                 {user.user_investments?.length > 0 && (
                   <div className="flex flex-col gap-3">
-                    {user.user_investments.map((inv, i) => (
+                    {user.user_investments.slice().reverse().map((inv, i) => (
                       <div
                         key={i}
                         className="inv-row flex items-center justify-between rounded-xl px-4 py-4"
