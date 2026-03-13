@@ -91,7 +91,7 @@ func Login(c *gin.Context) {
 		token,       // value
 		86400,       // seconds (24h)
 		"/",         // path
-		"localhost", // domain
+		"startup-fair-2026.onrender.com", // domain
 		false,       // secure (true in HTTPS)
 		true,        // httpOnly
 	)
@@ -106,7 +106,7 @@ func Logout(c *gin.Context) {
 		"",      // empty value
 		-1,      // MaxAge (-1 deletes cookie)
 		"/",     // path
-		"localhost",      // domain
+		"startup-fair-2026.onrender.com",      // domain
 		false,   // secure (true if using HTTPS)
 		true,    // httpOnly
 	)
