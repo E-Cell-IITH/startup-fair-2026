@@ -22,7 +22,7 @@ func InsertStartup(name string, description string, ctx context.Context) error {
 func GetAllStartups(ctx context.Context) ([]schema.Startup, error) {
 
 	query := `
-	SELECT startup_id,startup_name,startup_description,current_valuation
+	SELECT startup_id,startup_name,startup_description
 	FROM startups
 	ORDER BY startup_id
 	`
@@ -43,7 +43,6 @@ func GetAllStartups(ctx context.Context) ([]schema.Startup, error) {
 			&s.StartupID,
 			&s.StartupName,
 			&s.StartupDescription,
-			&s.CurrentValuation,
 		)
 
 		if err != nil {

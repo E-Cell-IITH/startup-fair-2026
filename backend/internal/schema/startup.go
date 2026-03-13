@@ -9,7 +9,7 @@ type Startup struct {
 	StartupID          int    `json:"startup_id"`
 	StartupName        string `json:"startup_name"`
 	StartupDescription string `json:"startup_description"`
-	CurrentValuation   int    `json:"current_valuation"`
+	
 }
 
 type UpdateStartupRequest struct {

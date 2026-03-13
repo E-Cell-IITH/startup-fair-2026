@@ -389,12 +389,6 @@ const StartupsPage = () => {
                     {startup.startup_description}
                   </p>
 
-                  <div className="flex items-center justify-between rounded-xl px-4 py-3 mb-4" style={{ background: "#f6f8ff" }}>
-                    <span className="text-xs font-medium" style={{ color: "#aab2cc" }}>Valuation</span>
-                    <span className="text-sm font-semibold" style={{ color: "#2f9e44" }}>
-                      ₹{Number(startup.current_valuation).toLocaleString()}
-                    </span>
-                  </div>
 
                   {!user?.is_admin && (
                     <button
