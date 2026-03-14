@@ -270,24 +270,7 @@ const StartupsPage = () => {
                   </p>
 
 
-                  {!user?.is_admin && (
-                    <button
-                      className="invest-btn w-full py-2.5 rounded-xl text-sm font-semibold text-white"
-                      style={{
-                        background: "linear-gradient(135deg,#4c6ef5,#845ef7)",
-                        border: "none",
-                        cursor: "pointer",
-                        boxShadow: "0 2px 10px rgba(76,110,245,0.2)"
-                      }}
-                      onClick={() => setInvestingStartup(startup)}
-                    >
-                      Invest
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+                  
         </div>
       </div>
     </>
