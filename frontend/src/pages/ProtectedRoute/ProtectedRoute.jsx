@@ -8,10 +8,8 @@ const ProtectedRoute = () => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    alert("ProtectedRoute mounted")
 
     const checkAuth = async () => {
-      alert("Starting auth check")
 
       try {
         const res = await fetch(
@@ -22,28 +20,25 @@ const ProtectedRoute = () => {
           }
         )
 
-        alert("Auth API responded with status: " + res.status)
 
         if (res.status === 401) {
-          alert("User unauthenticated (401)")
+        
           setStatus("unauthenticated")
           return
         }
 
         if (!res.ok) {
-          alert("Auth request failed: " + res.status)
+       
           throw new Error("Auth request failed")
         }
 
         const data = await res.json()
 
-        alert("User authenticated. User ID: " + data.user?.user_id)
 
         setUser(data.user)
         setStatus("authenticated")
 
       } catch (err) {
-        alert("Auth check error: " + err.message)
         console.error("Auth check error:", err)
         setStatus("unauthenticated")
       }
@@ -53,7 +48,7 @@ const ProtectedRoute = () => {
   }, [])
 
   if (status === "loading") {
-    alert("Status = loading")
+   
 
     return (
       <div
@@ -90,11 +85,9 @@ const ProtectedRoute = () => {
   }
 
   if (status === "unauthenticated") {
-    alert("Redirecting to login page")
+   
     return <Navigate to="/" replace />
   }
-
-  alert("User authenticated → rendering protected content")
 
   return (
     <>
