@@ -4,11 +4,15 @@ import Navbar from "../../components/Navbar"
 import Footer from "../../components/Footer"
 
 const ProtectedRoute = () => {
-  const [status, setStatus] = useState("loading") // loading | authenticated | unauthenticated
+  const [status, setStatus] = useState("loading")
   const [user, setUser] = useState(null)
 
   useEffect(() => {
+    alert("ProtectedRoute mounted")
+
     const checkAuth = async () => {
+      alert("Starting auth check")
+
       try {
         const res = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/api/auth/me`,
@@ -18,20 +22,28 @@ const ProtectedRoute = () => {
           }
         )
 
+        alert("Auth API responded with status: " + res.status)
+
         if (res.status === 401) {
+          alert("User unauthenticated (401)")
           setStatus("unauthenticated")
           return
         }
 
         if (!res.ok) {
+          alert("Auth request failed: " + res.status)
           throw new Error("Auth request failed")
         }
 
         const data = await res.json()
+
+        alert("User authenticated. User ID: " + data.user?.user_id)
+
         setUser(data.user)
         setStatus("authenticated")
 
       } catch (err) {
+        alert("Auth check error: " + err.message)
         console.error("Auth check error:", err)
         setStatus("unauthenticated")
       }
@@ -41,6 +53,8 @@ const ProtectedRoute = () => {
   }, [])
 
   if (status === "loading") {
+    alert("Status = loading")
+
     return (
       <div
         style={{
@@ -76,8 +90,11 @@ const ProtectedRoute = () => {
   }
 
   if (status === "unauthenticated") {
+    alert("Redirecting to login page")
     return <Navigate to="/" replace />
   }
+
+  alert("User authenticated → rendering protected content")
 
   return (
     <>
