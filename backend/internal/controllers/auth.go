@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -85,6 +86,7 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+	fmt.Print("Setting up cookie")
 	// send response to user
 	c.SetSameSite(http.SameSiteNoneMode)
 	c.SetCookie(
@@ -96,12 +98,15 @@ func Login(c *gin.Context) {
 		true,       // secure (true in HTTPS)
 		true,        // httpOnly
 	)
+	fmt.Print("Cookie set up done")
 	c.JSON(http.StatusOK, gin.H{
 		"user_details": response,
 	})
+	
 }
 
 func Logout(c *gin.Context) {
+	c.SetSameSite(http.SameSiteNoneMode)
 	c.SetCookie(
 		"token", // cookie name
 		"",      // empty value
