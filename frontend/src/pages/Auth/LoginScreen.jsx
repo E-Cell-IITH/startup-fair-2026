@@ -1,5 +1,5 @@
 import { GoogleLogin } from '@react-oauth/google';
-import { useNavigate } from "react-router-dom"
+import { replace, useNavigate } from "react-router-dom"
 
 const TrendIcon = () => (
   <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
@@ -30,7 +30,7 @@ export default function LoginScreen() {
       }
 
 
-      navigate("/startups")
+      navigate("/startups", { replace: true })
 
     } catch (error) {
 
