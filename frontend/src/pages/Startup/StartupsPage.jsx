@@ -179,9 +179,7 @@ const StartupsPage = () => {
       {editingStartup && (
         <EditModal startup={editingStartup} onClose={() => setEditingStartup(null)} fetchStartups={fetchStartups} />
       )}
-      {investingStartup && (
-        <InvestModal startup={investingStartup} onClose={() => setInvestingStartup(null)} fetchStartups={fetchStartups} />
-      )}
+      
 
       <div
         className="min-h-screen font-outfit px-6 py-12"
