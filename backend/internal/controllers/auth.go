@@ -86,6 +86,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	// send response to user
+	c.SetSameSite(http.SameSiteNoneMode)
 	c.SetCookie(
 		"token",     // name
 		token,       // value
