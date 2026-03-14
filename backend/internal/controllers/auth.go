@@ -86,30 +86,36 @@ func Login(c *gin.Context) {
 		return
 	}
 	// send response to user
-	c.SetCookie(
-		"token",     // name
-		token,       // value
-		86400,       // seconds (24h)
-		"/",         // path
-		"startup-fair-2026.onrender.com", // domain
-		false,       // secure (true in HTTPS)
-		true,        // httpOnly
-	)
+	cookie := &http.Cookie{
+		Name:     "token",
+		Value:    token,
+		Path:     "/",
+		Domain:   "startup-fair-2026.onrender.com",
+		MaxAge:   86400,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+	}
+
+	http.SetCookie(c.Writer, cookie)
 	c.JSON(http.StatusOK, gin.H{
 		"user_details": response,
 	})
 }
 
 func Logout(c *gin.Context) {
-	c.SetCookie(
-		"token", // cookie name
-		"",      // empty value
-		-1,      // MaxAge (-1 deletes cookie)
-		"/",     // path
-		"startup-fair-2026.onrender.com",      // domain
-		false,   // secure (true if using HTTPS)
-		true,    // httpOnly
-	)
+	cookie := &http.Cookie{
+		Name:     "token",
+		Value:    "",
+		Path:     "/",
+		Domain:   "startup-fair-2026.onrender.com",
+		MaxAge:   -1,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+	}
+
+	http.SetCookie(c.Writer, cookie)
 
 	c.JSON(200, gin.H{
 		"message": "Logged out successfully",
